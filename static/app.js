@@ -33,15 +33,33 @@ $( document ).ready(function() {
 
     $('#createTxData').click(function(){
         amountElement.removeClass('is-invalid');
+        $('#amountError').hide();
+
         var amount = amountElement.val();
         var balance = balanceElement.val();
         var validNumber = !isNaN(amount);
-        if (!validNumber || amount <= 0 || amount > balance) {
-            txDataElement.val('');
+
+        if (!validNumber) {
             amountElement.addClass('is-invalid');
+            $('#amountError').text('Invalid value.').show();
             amountElement.focus();
             return;
         }
+
+        if (amount <= 0) {
+            amountElement.addClass('is-invalid');
+            $('#amountError').text('Value have to be > 0.').show();
+            amountElement.focus();
+            return;
+        }
+
+        if (amount > balance) {
+            amountElement.addClass('is-invalid');
+            $('#amountError').text('Value cannot exceed balance value.').show();
+            amountElement.focus();
+            return;
+        }
+
         var txData = encodeTxData(toAtomic(amount));
         txDataElement.val(txData);
     });
@@ -51,7 +69,7 @@ $( document ).ready(function() {
         e.preventDefault();
     });
 
-    web3 = new Web3("https://mainnet.infura.io/v3/1786ccd330d34c618dfb9af336fb4d86");
+    web3 = new Web3('https://mainnet.infura.io/v3/1786ccd330d34c618dfb9af336fb4d86');
     token = new web3.eth.Contract(TokenContractABI, TokenContractAddress);
 });
 
