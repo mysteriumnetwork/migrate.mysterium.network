@@ -91,7 +91,6 @@ function showAddressBalance(address) {
 }
 
 function encodeTxData(amount) {
-    var token = new web3.eth.Contract(TokenContractABI, TokenContractAddress);
     return token.methods.upgrade(amount).encodeABI();
 }
 
